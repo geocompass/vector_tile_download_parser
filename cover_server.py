@@ -76,14 +76,14 @@ def get_geojson_by_areacode(quhuaTable, areacode):
             '{{"type": "Feature", "geometry": ' 
             || ST_AsGeoJSON(st_simplify(geom,0.001)) 
             || '}}' AS features 
-            FROM {quhuaTable} WHERE code = '{areacode}'
+            FROM {quhuaTable} WHERE code like '{areacode}%'
         """
     queryData = queryBySQL(sql.format(
         areacode=areacode, quhuaTable=quhuaTable))
     if not queryData:
         return False
     area_json = queryData.fetchone()
-    if len(area_json) == 0:
+    if not area_json or len(area_json) == 0:
         return False
 
     return json.loads(area_json[0])

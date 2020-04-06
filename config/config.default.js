@@ -21,6 +21,7 @@ module.exports = (appInfo) => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
+    python_cover_host: "http://127.0.0.1:5000",
     mongo_config: "mongodb://localhost:27017/vector_tile",
     sequelize: {
       dialect: "postgres",

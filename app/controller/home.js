@@ -1,5 +1,5 @@
 "use strict";
-
+const axios = require("axios");
 const Controller = require("egg").Controller;
 
 class HomeController extends Controller {
@@ -74,6 +74,25 @@ class HomeController extends Controller {
     );
     ctx.body = geom_properties;
   }
+  async cover_tiles() {
+    const { ctx, config } = this;
+    let { collection, zoom, area_code } = ctx.query;
+    if (!collection || !zoom || !area_code) {
+      ctx.body = "collection, zoom, area_code params not found.";
+      return;
+    }
+    let cover_url = config.python_cover_host + "/cover";
+    let cover_res = await axios.get(cover_url, {
+      params: {
+        area_code,
+        collection,
+        zoom,
+      },
+    });
+    ctx.body = cover_res.data;
+
+    //'http://127.0.0.1:5001/cover?area_code=110108&zoom=14&collection=tdt_image'
+  }
   async start_parse() {
     const { ctx } = this;
     let url = `http://7rp.geo-compass.com/api/v1/codeMap/false/321102005007/10/851/415.mvt?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODYwODQyNDgsInVzZXJpZCI6IjE4NjI0NiIsInVzZXJuYW1lIjoiMzIxMTAyIiwiY29kZSI6IjMyMTEwMiIsImNvZGVfbmFtZSI6IuS6rOWPo-WMuiIsImtleSI6IkVGRTIxNEMyN0Y0N0JCMjg5NDAwOTYzMTE2Qjg0QzIzIiwiaWF0IjoxNTg1OTk3ODQ4fQ.zcq0viChPM9N2mykxgjIoOAqi646EUbgylV8TqI0DmE`;
@@ -102,7 +121,7 @@ class HomeController extends Controller {
     let mgModel = await ctx.service.task.mgModel(collection);
     while (true) {
       let tasks = await ctx.service.task.get_task(mgModel, 1000);
-      if (!tasks) {
+      if (!tasks || tasks.length === 0) {
         ctx.body = "not found download tasks.";
         break;
       }
@@ -122,7 +141,7 @@ class HomeController extends Controller {
       }
     }
 
-    ctx.body = tasks;
+    // ctx.body = "tasks";
   }
 }
 

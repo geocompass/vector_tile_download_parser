@@ -26,7 +26,7 @@ class DownloadService extends Service {
       z: Number,
       x: Number,
       y: Number,
-      data: String,
+      data: Buffer,
     });
     let model = mongoose.model(tableName, TileSchema, tableName);
     app.model[tableName] = model;
