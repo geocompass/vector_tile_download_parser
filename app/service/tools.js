@@ -13,6 +13,18 @@ class DownloadService extends Service {
       })
       .then((response) => {
         data = Buffer.from(response.data, "binary"); //.toString("base64");
+      })
+      .catch((err) => {
+        console.log(
+          "request image got error,z:",
+          z,
+          "x:",
+          x,
+          ",y:",
+          y,
+          "err:",
+          err
+        );
       });
     return data;
   }

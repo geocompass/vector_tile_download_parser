@@ -1,5 +1,6 @@
 "use strict";
 const axios = require("axios");
+const moment = require("moment");
 const Controller = require("egg").Controller;
 
 class HomeController extends Controller {
@@ -7,14 +8,28 @@ class HomeController extends Controller {
     const { ctx } = this;
     ctx.body = {
       hi: "egg",
-      layer_names:
-        "http://127.0.0.1:7001/layer_names?url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
-      layer_info:
-        "http://127.0.0.1:7001/layer_info?url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
-      to_geojson:
-        "http://127.0.0.1:7001/to_geojson?z=16&x=53557&y=28604&url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
-      geom_and_properties:
-        "http://127.0.0.1:7001/geom_and_properties?z=16&x=53557&y=28604&url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
+      download: {
+        step_1: "获取兴趣区域的区划代码，如110108",
+        
+        "1.cover":
+          "http://127.0.0.1:7001/cover?area_code=110108&zoom=14&collection=tdt_image",
+        "2.start_download":
+          "http://127.0.0.1:7001/start_download?collection=tdt_image",
+      },
+      mvt: {
+        start_parse_batch:
+          "http://127.0.0.1:7001/parse_mvt_batch?url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
+        start_parse_one:
+          "http://127.0.0.1:7001/parse_mvt_one?url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
+        layer_names:
+          "http://127.0.0.1:7001/layer_names?url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
+        layer_info:
+          "http://127.0.0.1:7001/layer_info?url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
+        to_geojson:
+          "http://127.0.0.1:7001/to_geojson?z=16&x=53557&y=28604&url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
+        geom_and_properties:
+          "http://127.0.0.1:7001/geom_and_properties?z=16&x=53557&y=28604&url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA",
+      },
     };
   }
   async layer_names() {
@@ -93,18 +108,6 @@ class HomeController extends Controller {
 
     //'http://127.0.0.1:5001/cover?area_code=110108&zoom=14&collection=tdt_image'
   }
-  async start_parse() {
-    const { ctx } = this;
-    let url = `http://7rp.geo-compass.com/api/v1/codeMap/false/321102005007/10/851/415.mvt?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODYwODQyNDgsInVzZXJpZCI6IjE4NjI0NiIsInVzZXJuYW1lIjoiMzIxMTAyIiwiY29kZSI6IjMyMTEwMiIsImNvZGVfbmFtZSI6IuS6rOWPo-WMuiIsImtleSI6IkVGRTIxNEMyN0Y0N0JCMjg5NDAwOTYzMTE2Qjg0QzIzIiwiaWF0IjoxNTg1OTk3ODQ4fQ.zcq0viChPM9N2mykxgjIoOAqi646EUbgylV8TqI0DmE`;
-    let [z, x, y] = [10, 851, 415];
-    let geom_properties = await ctx.service.home.geom_and_properties(
-      url,
-      z,
-      x,
-      y
-    );
-    ctx.body = await ctx.service.mvtParser.mg2pg(geom_properties);
-  }
   async start_download() {
     const { ctx } = this;
     // let url = ctx.query.url;
@@ -118,30 +121,63 @@ class HomeController extends Controller {
       ctx.body = "&collection=google_images not found.";
       return;
     }
-    let mgModel = await ctx.service.task.mgModel(collection);
+    let mgModel = await ctx.service.mgModel.mgModel(collection);
+    let batch_count = 0;
     while (true) {
       let tasks = await ctx.service.task.get_task(mgModel, 1000);
       if (!tasks || tasks.length === 0) {
+        console.log(
+          "not found download tasks, or done the download task!===================="
+        );
         ctx.body = "not found download tasks.";
         break;
       }
-      // let url = `http://ditu.google.cn/maps/vt/lyrs=s&x=${x}&y=${y}&z=${z}`;
+      batch_count++;
+      console.log(
+        `get ${batch_count} batch ${tasks.length} tasks to download`,
+        moment().format()
+      );
       for (let task of tasks) {
         let { x, y, z } = task;
-        let url = `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x=${x}&y=${y}&l=${z}&tk=4830425f5d789b48b967b1062deb8c71`;
-        let image_data = await ctx.service.download.downloadImage(url, z, x, y);
+        let url = `http://ditu.google.cn/maps/vt/lyrs=s&x=${x}&y=${y}&z=${z}`;
+        // let url = `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x=${x}&y=${y}&l=${z}&tk=4830425f5d789b48b967b1062deb8c71`;
+        let image_data = await ctx.service.tools.downloadImage(url, z, x, y);
         if (!image_data) {
-          console.log("image download failed:", z, x, y);
+          // console.log("image download failed:", z, x, y);
           continue;
         }
         // task.data = image_data;
         let query = { x: task.x, y: task.y, z: task.z };
         let setter = { $set: { data: image_data } };
-        await mgModel.update(query, setter);
+        await mgModel.updateOne(query, setter);
       }
     }
 
     // ctx.body = "tasks";
+  }
+  async parse_mvt_one() {
+    const { ctx } = this;
+    let url = `http://7rp.geo-compass.com/api/v1/codeMap/false/321102005007/10/851/415.mvt?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODYwODQyNDgsInVzZXJpZCI6IjE4NjI0NiIsInVzZXJuYW1lIjoiMzIxMTAyIiwiY29kZSI6IjMyMTEwMiIsImNvZGVfbmFtZSI6IuS6rOWPo-WMuiIsImtleSI6IkVGRTIxNEMyN0Y0N0JCMjg5NDAwOTYzMTE2Qjg0QzIzIiwiaWF0IjoxNTg1OTk3ODQ4fQ.zcq0viChPM9N2mykxgjIoOAqi646EUbgylV8TqI0DmE`;
+    let [z, x, y] = [10, 851, 415];
+    let geom_properties = await ctx.service.home.geom_and_properties(
+      url,
+      z,
+      x,
+      y
+    );
+    ctx.body = await ctx.service.mvtParser.mg2pg(geom_properties);
+  }
+  async parse_mvt_batch() {
+    const { ctx } = this;
+    let url = `http://7rp.geo-compass.com/api/v1/codeMap/false/321102005007/10/851/415.mvt?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODYwODQyNDgsInVzZXJpZCI6IjE4NjI0NiIsInVzZXJuYW1lIjoiMzIxMTAyIiwiY29kZSI6IjMyMTEwMiIsImNvZGVfbmFtZSI6IuS6rOWPo-WMuiIsImtleSI6IkVGRTIxNEMyN0Y0N0JCMjg5NDAwOTYzMTE2Qjg0QzIzIiwiaWF0IjoxNTg1OTk3ODQ4fQ.zcq0viChPM9N2mykxgjIoOAqi646EUbgylV8TqI0DmE`;
+    let [z, x, y] = [10, 851, 415];
+    let geom_properties = await ctx.service.home.geom_and_properties(
+      url,
+      z,
+      x,
+      y
+    );
+    ctx.body = await ctx.service.mvtParser.mg2pg(geom_properties);
   }
 }
 

@@ -2,9 +2,12 @@ const fs = require("fs");
 
 const TOOLS = require("./app/tools");
 
+let [z, x, y] = [16, 114722, 15137];
+let path = __dirname + `/pbfs/mgtiles_${z}_${x}_${y}.pbf`;
+
 // let [z, x, y] = [10, 851, 415];
-let [z, x, y] = [13, 6814, 3321];
-let path = __dirname + `/pbfs/area_${z}_${x}_${y}.mvt`;
+// let [z, x, y] = [13, 6814, 3321];
+// let path = __dirname + `/pbfs/area_${z}_${x}_${y}.mvt`;
 
 // let [z, x, y] = [11, 1703, 830];
 // let path = __dirname + `/pbfs/building_${z}_${x}_${y}.mvt`;
