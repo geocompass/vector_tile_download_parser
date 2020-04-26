@@ -28,5 +28,24 @@ class DownloadService extends Service {
       });
     return data;
   }
+  async downloadAndUpdateMG(collection, z, x, y) {
+    const { ctx, app, config } = this;
+    let mgModel = app.model[collection]
+    let url = config.tile_urls[collection];
+    url = url.replace('{x', '${x')
+    url = url.replace('{y', '${y')
+    url = url.replace('{z', '${z')
+    url = eval('`' + url + '`');
+    let image_data = await this.downloadImage(url, z, x, y);
+    if (!image_data) {
+      // console.log("image download failed:", z, x, y);
+      return;
+    }
+    // task.data = image_data;
+    let query = { x: x, y: y, z: z };
+    let setter = { $set: { data: image_data } };
+    await mgModel.updateOne(query, setter);
+    console.log("DONE", z, x, y)
+  }
 }
 module.exports = DownloadService;

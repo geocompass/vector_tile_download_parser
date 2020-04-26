@@ -1,3 +1,4 @@
+# coding=UTF-8
 import collections
 from rasterio.crs import CRS
 from rasterio.warp import transform
@@ -28,7 +29,7 @@ def queryBySQL(sql):
 
 @app.route('/')
 def hello_world():
-    return 'Hello flask!'
+    return 'http://localhost:5000/cover?area_code=&zoom=&collection='
 
 
 @app.route('/cover', methods=['GET'])
@@ -66,7 +67,7 @@ def cover():
         return jsonify(result)
     covers = get_cover_by_geojson(geojson, zoom)
     insert_covers(covers, collection)
-    result['data'] = covers
+    result['data'] = len(covers)
     return jsonify(result)
 
 

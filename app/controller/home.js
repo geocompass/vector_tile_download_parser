@@ -10,7 +10,7 @@ class HomeController extends Controller {
       hi: "egg",
       download: {
         step_1: "获取兴趣区域的区划代码，如110108",
-        
+
         "1.cover":
           "http://127.0.0.1:7001/cover?area_code=110108&zoom=14&collection=tdt_image",
         "2.start_download":
@@ -109,7 +109,7 @@ class HomeController extends Controller {
     //'http://127.0.0.1:5001/cover?area_code=110108&zoom=14&collection=tdt_image'
   }
   async start_download() {
-    const { ctx } = this;
+    const { ctx, app } = this;
     // let url = ctx.query.url;
     let collection = ctx.query.collection;
     // if (!url) {
@@ -117,42 +117,39 @@ class HomeController extends Controller {
     //     http://127.0.0.1:7001/geom_and_properties?z=16&x=53557&y=28604&url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA`;
     //   return;
     // }
+    async function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
     if (!collection) {
-      ctx.body = "&collection=google_images not found.";
+      ctx.body = "&collection=google_image not found.";
       return;
     }
-    let mgModel = await ctx.service.mgModel.mgModel(collection);
     let batch_count = 0;
     while (true) {
-      let tasks = await ctx.service.task.get_task(mgModel, 1000);
+      let tasks = await ctx.service.task.get_task(collection, 1000);
       if (!tasks || tasks.length === 0) {
         console.log(
-          "not found download tasks, or done the download task!===================="
+          "not found download tasks, or done the download task!================================"
         );
         ctx.body = "not found download tasks.";
         break;
       }
       batch_count++;
       console.log(
-        `get ${batch_count} batch ${tasks.length} tasks to download`,
+        `get ${batch_count} batch ${tasks.length} tasks to download==================================`,
         moment().format()
       );
-      for (let task of tasks) {
-        let { x, y, z } = task;
-        let url = `http://ditu.google.cn/maps/vt/lyrs=s&x=${x}&y=${y}&z=${z}`;
-        // let url = `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x=${x}&y=${y}&l=${z}&tk=4830425f5d789b48b967b1062deb8c71`;
-        let image_data = await ctx.service.tools.downloadImage(url, z, x, y);
-        if (!image_data) {
-          // console.log("image download failed:", z, x, y);
-          continue;
+      for (let index in tasks) {
+        let { x, y, z } = tasks[index];
+        ctx.service.tools.downloadAndUpdateMG(collection, z, x, y)
+        if (index % 100 === 0) {
+          console.log("100 hundard downloaded!", moment().format())
+          await sleep(1000)
         }
-        // task.data = image_data;
-        let query = { x: task.x, y: task.y, z: task.z };
-        let setter = { $set: { data: image_data } };
-        await mgModel.updateOne(query, setter);
       }
     }
-
+    console.log("ALL image downloaded DONEEEEEEEE!!!!!!!!!!!!===========")
     // ctx.body = "tasks";
   }
   async parse_mvt_one() {
@@ -179,6 +176,7 @@ class HomeController extends Controller {
     );
     ctx.body = await ctx.service.mvtParser.mg2pg(geom_properties);
   }
+
 }
 
 module.exports = HomeController;

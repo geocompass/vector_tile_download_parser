@@ -21,6 +21,11 @@ module.exports = (appInfo) => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
+    tile_urls: {
+      "google_image": `http://ditu.google.cn/maps/vt/lyrs=s&x={x}&y={y}&z={z}`,
+      "tdt_image": `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=4830425f5d789b48b967b1062deb8c71`,
+      "vector_tiles": ``
+    },
     python_cover_host: "http://127.0.0.1:5000",
     mongo_config: "mongodb://localhost:27017/vector_tile",
     sequelize: {
@@ -46,7 +51,7 @@ module.exports = (appInfo) => {
         underscored: false,
         freezeTableName: true,
       },
-      logging: function (sql) {},
+      logging: function (sql) { },
     },
   };
 
