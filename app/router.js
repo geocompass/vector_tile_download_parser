@@ -14,4 +14,5 @@ module.exports = (app) => {
   router.get("/parse_mvt_batch", controller.home.parse_mvt_batch);
   router.get("/cover", controller.home.cover_tiles);
   router.get("/start_download", controller.home.start_download);
+  router.get("/wmts", controller.home.wmts);
 };

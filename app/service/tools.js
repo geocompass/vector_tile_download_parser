@@ -47,5 +47,12 @@ class DownloadService extends Service {
     await mgModel.updateOne(query, setter);
     console.log("DONE", z, x, y)
   }
+  async wmts(collection, z, x, y) {
+    const { ctx, app, config } = this;
+    let mgModel = app.model[collection]
+    let query = { x: x, y: y, z: z };
+    let tilesData = await mgModel.findOne(query);
+    return tilesData['data']
+  }
 }
 module.exports = DownloadService;

@@ -176,6 +176,13 @@ class HomeController extends Controller {
     );
     ctx.body = await ctx.service.mvtParser.mg2pg(geom_properties);
   }
+  async wmts() {
+    const { ctx } = this;
+    let { z, x, y, collection } = ctx.query;
+    let tileData = await ctx.service.tools.wmts(collection, z, x, y)
+    ctx.set('Content-Type', 'image/jpeg')
+    ctx.body = tileData;
+  }
 
 }
 
