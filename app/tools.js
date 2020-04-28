@@ -72,4 +72,7 @@ module.exports = {
     }
     return features;
   },
+  async sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  },
 };

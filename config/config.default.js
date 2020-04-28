@@ -22,9 +22,9 @@ module.exports = (appInfo) => {
   const userConfig = {
     // myAppName: 'egg',
     tile_urls: {
-      "google_image": `http://ditu.google.cn/maps/vt/lyrs=s&x={x}&y={y}&z={z}`,
-      "tdt_image": `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=4830425f5d789b48b967b1062deb8c71`,
-      "vector_tiles": ``
+      google_image: `http://ditu.google.cn/maps/vt/lyrs=s&x={x}&y={y}&z={z}`,
+      tdt_image: `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=4830425f5d789b48b967b1062deb8c71`,
+      vector_tile: `http://yjvt.geo-compass.com/geocmap/api/v1/tileset/11001000001/4/{z}/{x}/{y}.pbf`,
     },
     python_cover_host: "http://127.0.0.1:5000",
     mongo_config: "mongodb://localhost:27017/vector_tile",
@@ -51,7 +51,7 @@ module.exports = (appInfo) => {
         underscored: false,
         freezeTableName: true,
       },
-      logging: function (sql) { },
+      logging: function (sql) {},
     },
   };
 

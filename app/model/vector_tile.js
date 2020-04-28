@@ -11,12 +11,12 @@ module.exports = (app) => {
     z: Number,
     x: Number,
     y: Number,
+    parsed: Number,
     data: Buffer,
   });
-  let tableName = "vector_tiles";
+  let tableName = "vector_tile";
   let model = mongoose.model(tableName, TileSchema, tableName);
   app.model[tableName] = model;
   // app.google_mgModel = model;
   // return model;
-
 };

@@ -29,7 +29,7 @@ def queryBySQL(sql):
 
 @app.route('/')
 def hello_world():
-    return 'http://localhost:5000/cover?area_code=&zoom=&collection='
+    return 'http://localhost:5000/cover?area_code=&zoom=&collection=&tile_type=image/vector'
 
 
 @app.route('/cover', methods=['GET'])
@@ -42,6 +42,7 @@ def cover():
     area_code = request.args.get('area_code')
     zoom = request.args.get('zoom')
     collection = request.args.get('collection')
+    tile_type = request.args.get('tile_type') or "image"
 
     if not area_code or not zoom or not collection:
         result['code'] = 0
@@ -65,7 +66,7 @@ def cover():
         result['code'] = 0
         result['msg'] = "geojson request failed."
         return jsonify(result)
-    covers = get_cover_by_geojson(geojson, zoom)
+    covers = get_cover_by_geojson(geojson, zoom, tile_type)
     insert_covers(covers, collection)
     result['data'] = len(covers)
     return jsonify(result)
@@ -90,7 +91,7 @@ def get_geojson_by_areacode(quhuaTable, areacode):
     return json.loads(area_json[0])
 
 
-def get_cover_by_geojson(geojson, zoom):
+def get_cover_by_geojson(geojson, zoom, tile_type):
     feature_map = collections.defaultdict(list)
 
     feature_map = geojson_parse_feature(
@@ -99,12 +100,21 @@ def get_cover_by_geojson(geojson, zoom):
     covers = feature_map.keys()
     XYZs = []
     for cover in covers:
-        xyz = {
-            "x": int(cover.x),
-            "y": int(cover.y),
-            "z": int(cover.z),
-            "data": None
-        }
+        if(tile_type == "image"):
+            xyz = {
+                "x": int(cover.x),
+                "y": int(cover.y),
+                "z": int(cover.z),
+                "data": None
+            }
+        else:
+            xyz = {
+                "x": int(cover.x),
+                "y": int(cover.y),
+                "z": int(cover.z),
+                "parsed": 0,
+                "data": None
+            }
         XYZs.append(xyz)
 
     return XYZs

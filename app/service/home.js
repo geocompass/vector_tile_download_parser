@@ -40,5 +40,15 @@ class HomeService extends Service {
     let geom_and_properties = TOOLS.geom_and_properties(mvt_buffer, z, x, y);
     return geom_and_properties;
   }
+  async tiledata_parse_insert(collection, z, x, y) {
+    const { app, ctx, config } = this;
+    let mgModel = app.model[collection];
+    let query = { x: x, y: y, z: z };
+    let tilesData = await mgModel.findOne(query);
+    let mvt_buffer = tilesData.data;
+    let geom_and_properties = TOOLS.geom_and_properties(mvt_buffer, z, x, y);
+    let parseResult = await ctx.service.mvtParser.mg2pg(geom_and_properties);
+    return parseResult;
+  }
 }
 module.exports = HomeService;
