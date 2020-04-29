@@ -2,7 +2,7 @@ module.exports = (app) => {
   const { STRING, INTEGER, DATE, GEOMETRY } = app.Sequelize;
 
   const BUIA = app.model.define("BUIA", {
-    id: {
+    gid: {
       type: INTEGER,
       autoIncrement: true,
       primaryKey: true,

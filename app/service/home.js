@@ -46,6 +46,9 @@ class HomeService extends Service {
     let query = { x: x, y: y, z: z };
     let tilesData = await mgModel.findOne(query);
     let mvt_buffer = tilesData.data;
+    if (mvt_buffer.length < 10 && mvt_buffer.length > 0) {
+      return true;
+    }
     let geom_and_properties = TOOLS.geom_and_properties(mvt_buffer, z, x, y);
     let parseResult = await ctx.service.mvtParser.mg2pg(geom_and_properties);
     return parseResult;

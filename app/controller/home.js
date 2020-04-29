@@ -199,7 +199,7 @@ class HomeController extends Controller {
           await ctx.service.task.update_parse_task(collection, z, x, y);
         }
       }
-      break;
+      // break;
     }
     console.log("ALL image parsed DONEEEEEEEE!!!!!!!!!!!!===========");
   }
