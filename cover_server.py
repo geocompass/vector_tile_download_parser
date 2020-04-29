@@ -13,13 +13,15 @@ import pymongo
 import json
 
 # connect postgresql
-SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://postgres:postgres@localhost/tdt2018'
+# SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://postgres:postgres@localhost/tdt2018'
+SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://postgres:postgres@172.16.100.143/china_census7'
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = _SQLAlchemy(app)
 
 # connect mongodb
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+# myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+myclient = pymongo.MongoClient("mongodb://172.16.108.201:27018/vector_tile")
 myMongo = myclient["vector_tile"]
 
 
@@ -49,13 +51,14 @@ def cover():
         result['msg'] = "no area_code,zoom,collection params"
         return jsonify(result)
     zoom = int(zoom)
-    quhuaTable = 'data_xian'
+    # quhuaTable = 'data_xian'
+    quhuaTable = 'data_1746'
     if len(area_code) == 6:
-        quhuaTable = "data_xian"
+        quhuaTable = "data_1746"
     elif len(area_code) == 4:
-        quhuaTable = "quhua_shi"
+        quhuaTable = "quhua_1745"
     elif len(area_code) == 2:
-        quhuaTable = "quhua_sheng"
+        quhuaTable = "quhua_1741"
     else:
         result['code'] = 0
         result['msg'] = "area_code not support"
@@ -66,7 +69,7 @@ def cover():
         result['code'] = 0
         result['msg'] = "geojson request failed."
         return jsonify(result)
-    covers = get_cover_by_geojson(geojson, zoom, tile_type)
+    covers = get_cover_by_geojson(geojson, area_code, zoom, tile_type)
     insert_covers(covers, collection)
     result['data'] = len(covers)
     return jsonify(result)
@@ -91,7 +94,7 @@ def get_geojson_by_areacode(quhuaTable, areacode):
     return json.loads(area_json[0])
 
 
-def get_cover_by_geojson(geojson, zoom, tile_type):
+def get_cover_by_geojson(geojson, area_code, zoom, tile_type):
     feature_map = collections.defaultdict(list)
 
     feature_map = geojson_parse_feature(
@@ -102,6 +105,7 @@ def get_cover_by_geojson(geojson, zoom, tile_type):
     for cover in covers:
         if(tile_type == "image"):
             xyz = {
+                "area_code": str(area_code),
                 "x": int(cover.x),
                 "y": int(cover.y),
                 "z": int(cover.z),
@@ -109,6 +113,7 @@ def get_cover_by_geojson(geojson, zoom, tile_type):
             }
         else:
             xyz = {
+                "area_code": str(area_code),
                 "x": int(cover.x),
                 "y": int(cover.y),
                 "z": int(cover.z),
@@ -187,7 +192,7 @@ def insert_covers(covers, collection):
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5004)
 
 
 # How to run this server backend?

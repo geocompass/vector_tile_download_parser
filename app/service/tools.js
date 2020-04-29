@@ -23,7 +23,7 @@ class DownloadService extends Service {
           ",y:",
           y,
           "err:",
-          err
+          // err
         );
       });
     return data;
@@ -37,13 +37,15 @@ class DownloadService extends Service {
     url = url.replace('{z', '${z')
     url = eval('`' + url + '`');
     let image_data = await this.downloadImage(url, z, x, y);
-    if (!image_data) {
-      // console.log("image download failed:", z, x, y);
-      return;
+    let setter = {};
+    if (image_data) {
+      setter = { $set: { data: image_data } };
+    } else {
+      //当未获取到瓦片时，存储为“false"
+      setter = { $set: { data: Buffer.from('false') } };
     }
     // task.data = image_data;
     let query = { x: x, y: y, z: z };
-    let setter = { $set: { data: image_data } };
     await mgModel.updateOne(query, setter);
     console.log("DONE", z, x, y)
   }

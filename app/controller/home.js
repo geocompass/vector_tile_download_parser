@@ -13,9 +13,11 @@ class HomeController extends Controller {
         step_1: "获取兴趣区域的区划代码，如110108",
 
         "1.cover":
-          "http://127.0.0.1:7001/cover?area_code=110108&zoom=14&collection=tdt_image",
+          "http://127.0.0.1:7001/cover?area_code=110108&zoom=14&collection=tdt_image&tile_type=image/vector",
         "2.start_download":
           "http://127.0.0.1:7001/start_download?collection=tdt_image",
+        "3.start_parse_mvt":
+          "http://127.0.0.1:7001/start_parse_mvt?collection=vector_tile",
       },
       mvt: {
         start_parse_batch:
@@ -115,15 +117,6 @@ class HomeController extends Controller {
     const { ctx, app } = this;
     // let url = ctx.query.url;
     let collection = ctx.query.collection;
-    // if (!url) {
-    //   ctx.body = `mapbox vector tile url params not found. example:
-    //     http://127.0.0.1:7001/geom_and_properties?z=16&x=53557&y=28604&url=https://b.tiles.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7/16/53557/28604.vector.pbf?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA`;
-    //   return;
-    // }
-    async function sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
     if (!collection) {
       ctx.body = "&collection=google_image not found.";
       return;
@@ -150,7 +143,9 @@ class HomeController extends Controller {
           console.log("100 hundard downloaded!", moment().format());
           await TOOLS.sleep(1000);
         }
+        // break;
       }
+      // break;
     }
     console.log("ALL image downloaded DONEEEEEEEE!!!!!!!!!!!!===========");
     ctx.body = "ALL image downloaded DONEEEEEEEE!!!!!!!";
@@ -204,7 +199,7 @@ class HomeController extends Controller {
           await ctx.service.task.update_parse_task(collection, z, x, y);
         }
       }
-      // break;
+      break;
     }
     console.log("ALL image parsed DONEEEEEEEE!!!!!!!!!!!!===========");
   }

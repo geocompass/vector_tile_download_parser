@@ -33,10 +33,10 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-vector_tile_parser",
-    "stop": "egg-scripts stop --title=egg-server-vector_tile_parser",
-    "dev": "egg-bin dev",
-    "debug": "egg-bin debug",
+    "start": "egg-scripts start --daemon --title=egg-server-vector_tile_parser --port=7004",
+    "stop": "egg-scripts stop --title=egg-server-vector_tile_parser --port=7004",
+    "dev": "egg-bin dev --port=7004",
+    "debug": "egg-bin debug --port=7004",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
