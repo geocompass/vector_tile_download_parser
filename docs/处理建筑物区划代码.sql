@@ -1,35 +1,26 @@
---数据跨库迁移 
--- SET statement_timeout TO 3000000;
+-- 超时设置
+SET statement_timeout TO 3000000;
+
 --更新区划代码
-UPDATE predict_buildings 
-SET in_code = data_cun.code,
-process_in_code = data_cun.process_code 
+UPDATE "BUIA" 
+SET area_code = data_cun.code
 FROM
 	data_cun 
 WHERE
-	data_cun.code LIKE'3601%' 
-	AND st_contains ( st_setsrid ( data_cun.geom, 4326 ), st_setsrid ( predict_buildings.geom, 4326 ) );
+	data_cun.code LIKE'320102%' and "BUIA".created_at >'2020-04-30 00:00:00'
+	AND st_contains ( st_setsrid ( data_cun.geom, 4326 ), st_setsrid ( "BUIA".geom, 4326 ) );
 
---更新其他属性
-UPDATE predict_buildings 
-SET SOURCE = 1,
-created_user = 'ADMIN',
-updated_user = 'ADMIN' 
-WHERE
-	updated_at BETWEEN '2020-04-17 15:00' 
-	AND '2020-04-20'
-	
--- 手工导入data_buildings表
+	-- 手工导入data_buildings表
 INSERT INTO "data_buildings"(geom,created_user,updated_user,
-in_code,process_in_code) SELECT
-	geom,
-	created_user,
-	updated_user,
-	in_code,
-	process_in_code 
+in_code,process_in_code,"source",hy_state) SELECT
+	st_setsrid(geom,4326),
+	'898735',
+	'898735',
+	area_code,
+	area_code ,
+	2,
+	1
 FROM
-	"predict_buildings" 
+	"BUIA"
 WHERE
- task_id between 22252 and 22294 --source默认为1
-
---data_buildings表有缺属性的条目360112102 430102001 2000+条
+ area_code like '320102010001%' 
