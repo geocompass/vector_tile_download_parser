@@ -40,16 +40,21 @@ class HomeService extends Service {
     let geom_and_properties = TOOLS.geom_and_properties(mvt_buffer, z, x, y);
     return geom_and_properties;
   }
-  async tiledata_parse_insert(collection, z, x, y) {
+  async tiledata_parse_insert(collection, zoom_level, tile_column, tile_row) {
     const { app, ctx, config } = this;
     let mgModel = app.model[collection];
-    let query = { x: x, y: y, z: z };
+    let query = { zoom_level, tile_column, tile_row };
     let tilesData = await mgModel.findOne(query);
-    let mvt_buffer = tilesData.data;
+    let mvt_buffer = tilesData.tile_data;
     if (mvt_buffer.length < 10 && mvt_buffer.length > 0) {
       return true;
     }
-    let geom_and_properties = TOOLS.geom_and_properties(mvt_buffer, z, x, y);
+    let geom_and_properties = TOOLS.geom_and_properties(
+      mvt_buffer,
+      zoom_level,
+      tile_column,
+      tile_row
+    );
     let parseResult = await ctx.service.mvtParser.mg2pg(geom_and_properties);
     return parseResult;
   }

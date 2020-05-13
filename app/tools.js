@@ -2,6 +2,7 @@ const vtpbf = require("vt-pbf");
 const VectorTile = require("@mapbox/vector-tile").VectorTile;
 const Protobuf = require("pbf");
 const wkx = require("wkx");
+const zlib = require("zlib");
 
 module.exports = {
   layer_names(data) {
@@ -16,6 +17,7 @@ module.exports = {
     if (!data) {
       return null;
     }
+    data = zlib.unzipSync(data);
     let tile = new VectorTile(new Protobuf(data));
     let layerNames = Object.keys(tile.layers);
     let layerInfos = {};
@@ -51,6 +53,7 @@ module.exports = {
     if (!data) {
       return null;
     }
+    data = zlib.unzipSync(data);
     let tile = new VectorTile(new Protobuf(data));
     let features = {};
     let layerNames = Object.keys(tile.layers);

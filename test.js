@@ -2,7 +2,8 @@ const fs = require("fs");
 
 const TOOLS = require("./app/tools");
 
-let [z, x, y] = [16, 114722, 15137];
+// let [z, x, y] = [16, 114722, 15137];
+let [z, x, y] = [14, 13665, 6163];
 let path = __dirname + `/pbfs/mgtiles_${z}_${x}_${y}.pbf`;
 
 // let [z, x, y] = [10, 851, 415];

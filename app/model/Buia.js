@@ -7,7 +7,9 @@ module.exports = (app) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    CLASID: STRING,
+    id: STRING,
+    clasid: STRING,
+    status: STRING,
     geom: STRING,
   });
   return BUIA;

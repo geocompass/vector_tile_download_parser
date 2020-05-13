@@ -8,11 +8,11 @@ module.exports = (app) => {
 
   const Schema = mongoose.Schema;
   const TileSchema = new Schema({
-    z: Number,
-    x: Number,
-    y: Number,
+    zoom_level: Number,
+    tile_column: Number,
+    tile_row: Number,
     parsed: Number,
-    data: Buffer,
+    tile_data: Buffer,
   });
   let tableName = "vector_tile";
   let model = mongoose.model(tableName, TileSchema, tableName);

@@ -188,15 +188,20 @@ class HomeController extends Controller {
         moment().format()
       );
       for (let index in tasks) {
-        let { x, y, z } = tasks[index];
+        let { zoom_level, tile_column, tile_row } = tasks[index];
         let paser_result = await ctx.service.home.tiledata_parse_insert(
           collection,
-          z,
-          x,
-          y
+          zoom_level,
+          tile_column,
+          tile_row
         );
         if (paser_result) {
-          await ctx.service.task.update_parse_task(collection, z, x, y);
+          await ctx.service.task.update_parse_task(
+            collection,
+            zoom_level,
+            tile_column,
+            tile_row
+          );
         }
       }
       // break;
