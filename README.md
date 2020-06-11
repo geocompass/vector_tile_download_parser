@@ -38,7 +38,7 @@
 
 ### （一） Nodejs 代码部署
 
-#### 1、 安装Node项目依赖包
+#### 1、 安装 Node 项目依赖包
 
 联网状态下，执行以下命令：
 
@@ -56,35 +56,29 @@ npm config get registry
 # 或npm info express
 ```
 
-
-
 #### 2、 谷歌或天地图瓦片连接信息配置
 
 在 `config/config.default.js` 中配置相关瓦片地址信息，如果需要下载天地图，请注册天地图并使用 `服务端` token。
 
 ```javascript
 //config/config.default.js
-const userConfig = {
-    tile_urls: {
-      google_image: `http://ditu.google.cn/maps/vt/lyrs=s&x={x}&y={y}&z={z}`,//谷歌影像地址
-      tdt_image: `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=tianditu_token`,//天地图地址
-      vector_tile: `http://172.16.108.201:7002/api/v1/tileset/11001000001/4/{z}/{x}/{y}.pbf`,//矢量切片地址
-    }
-}
+const userConfig = {
+  tile_urls: {
+    google_image: `http://ditu.google.cn/maps/vt/lyrs=s&x={x}&y={y}&z={z}`, //谷歌影像地址
+    tdt_image: `https://t1.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=tianditu_token`, //天地图地址
+    vector_tile: `http://mvt_host/{z}/{x}/{y}.pbf`, //矢量切片地址
+  },
+};
 ```
 
-
-
-#### 3、配置Python 瓦片计算服务连接信息
+#### 3、配置 Python 瓦片计算服务连接信息
 
 ```javascript
 //config/config.default.js
-const userConfig = {
-    python_cover_host: "http://127.0.0.1:5004"
-}
+const userConfig = {
+  python_cover_host: "http://127.0.0.1:5004",
+};
 ```
-
-
 
 #### 4、 配置数据库连接信息
 
@@ -116,13 +110,11 @@ npm run debug //以调试模式启动，可查看输出
 http://127.0.0.1:7001/
 ```
 
-
-
 ### （二） Python 代码部署
 
-#### 1、安装Python依赖包
+#### 1、安装 Python 依赖包
 
-联网状态下，执行以下命令，安装Python依赖包：
+联网状态下，执行以下命令，安装 Python 依赖包：
 
 ```shell
 cd vector_tile_download_parser
@@ -163,11 +155,9 @@ python cover_server.py
 http://127.0.0.1:5004/
 ```
 
-
-
 ## 四、 区划数据准备
 
-### （一）在PostGIS中导入区划边界数据
+### （一）在 PostGIS 中导入区划边界数据
 
 导入带有区划代码的区划编辑数据，并且区划代码字段名称为：`code`。
 
@@ -179,19 +169,15 @@ http://127.0.0.1:5004/
 "quhua_sheng"  # 省边界
 ```
 
-如果不符合规则，可在上述Python代码中修改。
-
-
+如果不符合规则，可在上述 Python 代码中修改。
 
 ## 五、 使用说明
-
-
 
 ### （一）指定下载范围
 
 以下载`海淀区`范围内的`14级`的`谷歌` `遥感影像`为例，：
 
--  `area_code` 为 `110108`
+- `area_code` 为 `110108`
 - 下载级别为 `14` 级
 - 下载内容为：`google_image`，需要与上述第三章中配置的信息一致。
 - `tile_type` 是指下载的是`影像`还是`矢量`。
@@ -216,15 +202,8 @@ http://127.0.0.1:7001/start_download?collection=google_image
 
 ### （三）调用下载的地图服务
 
-以上瓦片下载完成后，可对下载的瓦片调用，使用QGIS等工具查看预览，配置内容如下：
+以上瓦片下载完成后，可对下载的瓦片调用，使用 QGIS 等工具查看预览，配置内容如下：
 
 ```http
 http://127.0.0.1:7001/wmts?collection=google_image&x={x}&y={y}&z={z}
 ```
-
-
-
-
-
-
-

@@ -13,16 +13,14 @@ import pymongo
 import json
 
 # connect postgresql
-# SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://postgres:postgres@localhost/tdt2018'
-SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://postgres:postgres@172.16.100.143/china_census7'
+SQLALCHEMY_DATABASE_URI = 'postgres+psycopg2://postgres:postgres@127.0.0.1/quhua_data'
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = _SQLAlchemy(app)
 
 # connect mongodb
-# myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-myclient = pymongo.MongoClient("mongodb://172.16.108.201:27018/vector_tile")
-myMongo = myclient["vector_tile"]
+myclient = pymongo.MongoClient("mongodb://127.0.0.1:27017/tile_donwloader")
+myMongo = myclient["tile_donwloader"]
 
 
 def queryBySQL(sql):
@@ -31,7 +29,7 @@ def queryBySQL(sql):
 
 @app.route('/')
 def hello_world():
-    return 'http://localhost:5000/cover?area_code=&zoom=&collection=&tile_type=image/vector'
+    return 'http://localhost:5004/cover?area_code=&zoom=&collection=&tile_type=image/vector'
 
 
 @app.route('/cover', methods=['GET'])
