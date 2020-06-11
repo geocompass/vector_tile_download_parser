@@ -1,0 +1,8 @@
+collections
+rasterio
+mercantile
+supermercado
+flask
+flask_sqlalchemy
+pymongo
+json
