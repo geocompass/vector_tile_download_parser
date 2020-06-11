@@ -52,13 +52,13 @@ def cover():
         return jsonify(result)
     zoom = int(zoom)
     # quhuaTable = 'data_xian'
-    quhuaTable = 'data_1746'
+    quhuaTable = 'data_xian'
     if len(area_code) == 6:
-        quhuaTable = "data_1746"
+        quhuaTable = "data_xian"
     elif len(area_code) == 4:
-        quhuaTable = "quhua_1745"
+        quhuaTable = "quhua_shi"
     elif len(area_code) == 2:
-        quhuaTable = "quhua_1741"
+        quhuaTable = "quhua_sheng"
     else:
         result['code'] = 0
         result['msg'] = "area_code not support"
