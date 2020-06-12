@@ -28,6 +28,10 @@ module.exports = (appInfo) => {
     },
     python_cover_host: "http://127.0.0.1:5004",
     mongo_config: "mongodb://127.0.0.1:27017/vector_tile",
+    mongo_option: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
     sequelize: {
       dialect: "postgres",
       host: "127.0.0.1",

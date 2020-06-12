@@ -2,9 +2,8 @@ const mongoose = require("mongoose");
 
 module.exports = (app) => {
   const { ctx, config } = app;
-  const mongo_config = config.mongo_config;
 
-  mongoose.connect(mongo_config);
+  mongoose.connect(config.mongo_config, config.mongo_option);
 
   const Schema = mongoose.Schema;
   const TileSchema = new Schema({
